@@ -1,6 +1,5 @@
 package main;
 
-import javafx.util.Pair;
 import main.Exceptions.WrongCellIndexException;
 import main.Exceptions.WrongNumberIndexException;
 import main.Exceptions.WrongNumberValueException;
@@ -160,6 +159,8 @@ public class SudokuBoard {
 
         ArrayList<Pair<Integer, Integer>> possibleSlots = new ArrayList<>();
 
+
+        solve:
         while (numberOFEmptySpots != 0) {
             ArrayList<Integer> missingNumbers = this.getMissingNumbersInCell(workingOnCellRow, workingOnCellColumn);
 
@@ -172,16 +173,17 @@ public class SudokuBoard {
                     }
                 }
                 if (possibleSlots.size() == 1) {
-                    board[possibleSlots.get(0).getKey()][possibleSlots.get(0).getValue()] = n;
+                    board[possibleSlots.get(0).getRow()][possibleSlots.get(0).getColumn()] = n;
                     numberOFEmptySpots--;
 
                     System.out.println("Working on cell: " + workingOnCellRow + " , " + workingOnCellColumn + " adding " + n);
                     System.out.println(this.toString());
-                }
-                else if(possibleSlots.size() == 2){
 
-                    System.out.println("Working on cell: " + workingOnCellRow + " , " + workingOnCellColumn + " adding " + n);
-                    System.out.println("two Options :\n" + possibleSlots.toString());
+                    continue solve;
+                } else if(possibleSlots.size() == 2) {
+//
+//                    System.out.println("Working on cell: " + workingOnCellRow + " , " + workingOnCellColumn + " adding " + n);
+//                    System.out.println("two Options :\n" + possibleSlots.toString());
 
                 }
                 possibleSlots = new ArrayList<>();
