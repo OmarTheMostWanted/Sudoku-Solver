@@ -1,11 +1,13 @@
-package test;
+package solver;
 
-
-import main.SudokuBoard;
+import Solver.DoubleCellInLinePosition;
+import Solver.Orientation;
+import Solver.Position;
+import Solver.SudokuBoard;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SudokuBoardTest {
 
@@ -36,7 +38,6 @@ public class SudokuBoardTest {
 //            Assertions.assertThrows(WrongCellIndexException.class, () -> {
 //                sudokuBoard.checkIfNumberInCell(1, 3, 0);
 //            });
-
 
 
     }
@@ -71,6 +72,44 @@ public class SudokuBoardTest {
 
         Assertions.assertFalse(sudokuBoard.checkIfNumberInRowAndColumn(5, 0, 0));
         Assertions.assertFalse(sudokuBoard.checkIfNumberInRowAndColumn(5, 8, 8));
+    }
+
+    @Test
+    void checkCollisionTest() {
+        Position positionA = new Position(1 , 2 , 1);
+        Position positionB = new Position(2 , 2 , 1);
+        DoubleCellInLinePosition doubleCellInLinePositionAB = new DoubleCellInLinePosition(positionA , positionB);
+
+        assertEquals(Orientation.Vertical , doubleCellInLinePositionAB.getOrientation());
+
+        Position positionC = new Position(6 , 2 , 1);
+        Position positionD = new Position(6 , 3 , 1);
+        DoubleCellInLinePosition doubleCellInLinePositionCD = new DoubleCellInLinePosition(positionC , positionD);
+
+        assertEquals(Orientation.Horizontal , doubleCellInLinePositionCD.getOrientation());
+
+        SudokuBoard sudokuBoard = new SudokuBoard("Blank");
+
+
+
+        boolean res =sudokuBoard.checkCollision(doubleCellInLinePositionAB , doubleCellInLinePositionCD);
+
+        assertTrue(res);
+
+    }
+
+    @Test
+    void DoubleCellInLineTest(){
+        SudokuBoard sudokuBoard = new SudokuBoard("Test Board 1");
+        sudokuBoard.setTestMode(true);
+        sudokuBoard.setRunFor(100);
+
+        sudokuBoard.solve();
+
+        assertEquals(0 , sudokuBoard.getDoubleCellInLinePositions().size());
+
+        assertEquals(1 , sudokuBoard.getBoard()[2][6]);
+
     }
 
 
