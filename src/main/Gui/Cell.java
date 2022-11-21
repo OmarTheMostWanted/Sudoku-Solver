@@ -74,36 +74,39 @@ public class Cell extends JPanel {
             var iB = ((rB*3) + cB);
 
 
-            var vA = cellNumber(board , INDEX , iA);
-            var vB = cellNumber(board , INDEX , iB);
+            var v = doubleCellInLinePosition.getValue();
 
-            if(vA != 0 && !possibleSpots.containsKey(iA)){
+            if(!possibleSpots.containsKey(iA)){
                 possibleSpots.put(iA , new HashSet<>());
             }
 
-            if(vB != 0 && !possibleSpots.containsKey(iB)){
+            if(!possibleSpots.containsKey(iB)){
                 possibleSpots.put(iB , new HashSet<>());
             }
 
 
-            FillPossibleBox(iA, vA);
-            FillPossibleBox(iB, vB);
+            FillPossibleBox(iA, v);
+            FillPossibleBox(iB, v);
         }
 //        for (ReservedTwoPositions reservedTwoPositions : sudokuBoard.reservedTwoPositionslist) {
 //
 //        }
     }
 
-    private void FillPossibleBox(int iA, int vA) {
-        if(boxes[iA].isEditable() && vA != 0  &&  !possibleSpots.get(iA).contains(vA)) {
-            boxes[iA].setText(boxes[iA].getText() + vA);
-            boxes[iA].setEnabled(false);
-            boxes[iA].setDisabledTextColor(Color.RED);
-            boxes[iA].setFont(new Font("Courier", Font.ITALIC, SIZE/4));
+    private void FillPossibleBox(int index, int value) {
+        if(boxes[index].isEditable() &&  !possibleSpots.get(index).contains(value)) {
+            boxes[index].setEnabled(false);
+            boxes[index].setDisabledTextColor(Color.RED);
+            boxes[index].setFont(new Font("Courier", Font.ITALIC, SIZE/4));
             var right = new SimpleAttributeSet();
             StyleConstants.setAlignment(right, StyleConstants.ALIGN_RIGHT);
-            boxes[iA].getStyledDocument().setParagraphAttributes(0, boxes[iA].getStyledDocument().getLength(), right, false);
-            possibleSpots.get(iA).add(vA);
+            boxes[index].getStyledDocument().setParagraphAttributes(0, boxes[index].getStyledDocument().getLength(), right, false);
+            possibleSpots.get(index).add(value);
+            StringBuilder sb = new StringBuilder();
+            for (Integer integer : possibleSpots.get(index)) {
+                sb.append(integer);
+            }
+            boxes[index].setText(sb.toString());
         }
     }
 

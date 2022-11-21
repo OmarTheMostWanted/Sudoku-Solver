@@ -201,6 +201,7 @@ public class SudokuBoard implements Runnable{
                 if (possibleSlots.size() == 1) {
                     fillNumber(possibleSlots.get(0).getRow(), possibleSlots.get(0).getColumn(), possibleSlots.get(0).getValue());
                     count = 0;
+                    possibleSlots.remove(0);
                     continue solve;
                 } else if (possibleSlots.size() == 2) {
                     if (possibleSlots.get(0).getRow() == possibleSlots.get(1).getRow() || possibleSlots.get(0).getColumn() == possibleSlots.get(1).getColumn()) {

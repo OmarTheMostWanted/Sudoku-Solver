@@ -37,8 +37,9 @@ public class Main {
                 while (true) {
                     board.UpdateCells();
                     sudokuBoard.OneStep();
+
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(10);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
