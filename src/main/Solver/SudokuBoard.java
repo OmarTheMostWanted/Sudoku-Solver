@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 import java.util.Scanner;
 
-public class SudokuBoard {
+public class SudokuBoard implements Runnable{
 
 
     private int[][] board;
@@ -21,8 +21,8 @@ public class SudokuBoard {
 
     private final String boardName;
 
-    private ArrayList<DoubleCellInLinePosition> doubleCellInLinePositions = new ArrayList<>();
-    private ArrayList<ReservedTwoPositions> reservedTwoPositionslist = new ArrayList<>();
+    public ArrayList<DoubleCellInLinePosition> doubleCellInLinePositions = new ArrayList<>();
+    public ArrayList<ReservedTwoPositions> reservedTwoPositionslist = new ArrayList<>();
 
     private int count = 0;
 
@@ -32,7 +32,7 @@ public class SudokuBoard {
     private boolean testMode;
     private int runFor;
 
-    public SudokuBoard(String filePath) {
+    public SudokuBoard(String filePath)  {
 
         Path path = Paths.get("assets", "games", (filePath + ".txt"));
         this.board = new int[9][9];
@@ -161,12 +161,15 @@ public class SudokuBoard {
         return true;
     }
 
+    public boolean Compelted = false;
+
     public void solve() {
 
         ArrayList<Position> possibleSlots = new ArrayList<>();
 
         solve:
         while (numberOFEmptySpots != 0) {
+
 
             if (testMode) {
                 if (runFor > 0) {
@@ -239,9 +242,94 @@ public class SudokuBoard {
                     }
                 }
             }
-
         }
+
     }
+
+    public void OneStep() {
+
+        ArrayList<Position> possibleSlots = new ArrayList<>();
+
+        solve:
+        if (numberOFEmptySpots != 0) {
+
+
+            if (testMode) {
+                if (runFor > 0) {
+                    runFor--;
+                } else return;
+            }
+
+            ArrayList<Integer> missingNumbers = this.getMissingNumbersInCell(workingOnCellRow, workingOnCellColumn);
+
+            count++;
+            for (int n : missingNumbers) {
+                possibleSlots = new ArrayList<>();
+                for (int r = workingOnCellRow * 3; r < workingOnCellRow * 3 + 3; r++) {
+                    for (int c = workingOnCellColumn * 3; c < workingOnCellColumn * 3 + 3; c++) {
+                        if (this.board[r][c] == 0 && !checkIfNumberInRowAndColumn(n, r, c)) {
+
+//                            if(reservedTwoPositionslist.isEmpty()){
+//                                possibleSlots.add(new Position(r, c, n));
+//                            }
+
+//                            for (ReservedTwoPositions reservedTwoPositions : reservedTwoPositionslist) {
+//                                if(!reservedTwoPositions.isReserved(r , c , n))
+                            possibleSlots.add(new Position(r, c, n));
+//                            }
+                        }
+                    }
+                }
+
+                if (possibleSlots.size() == 1) {
+                    fillNumber(possibleSlots.get(0).getRow(), possibleSlots.get(0).getColumn(), possibleSlots.get(0).getValue());
+                    count = 0;
+                    return;
+                } else if (possibleSlots.size() == 2) {
+                    if (possibleSlots.get(0).getRow() == possibleSlots.get(1).getRow() || possibleSlots.get(0).getColumn() == possibleSlots.get(1).getColumn()) {
+
+                        DoubleCellInLinePosition add = new DoubleCellInLinePosition(possibleSlots.get(0), possibleSlots.get(1));
+                        if (!doubleCellInLinePositions.contains(add))
+
+                            for(DoubleCellInLinePosition d : doubleCellInLinePositions){
+                                lockDoublePosition(d , add);
+                            }
+
+                        doubleCellInLinePositions.add(new DoubleCellInLinePosition(possibleSlots.get(0), possibleSlots.get(1)));
+                    }
+                } else count++;
+
+            }
+
+            if (workingOnCellColumn < 2) {
+                workingOnCellColumn++;
+            } else if (workingOnCellRow < 2) {
+                workingOnCellColumn = 0;
+                workingOnCellRow++;
+            } else {
+                workingOnCellColumn = 0;
+                workingOnCellRow = 0;
+            }
+
+            if (count > 81) {
+                for (DoubleCellInLinePosition out : doubleCellInLinePositions) {
+                    for (DoubleCellInLinePosition in : doubleCellInLinePositions) {
+
+                        lockDoublePosition(out, in);
+
+                        if (checkCollision(out, in)) {
+                            doubleCellInLinePositions.remove(in);
+                            count = 0;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        Compelted = true;
+    }
+
+
 
     public boolean lockDoublePosition(DoubleCellInLinePosition out, DoubleCellInLinePosition in) {
         if (out.checkOverLap(in)) {
@@ -375,4 +463,8 @@ public class SudokuBoard {
         this.runFor = runFor;
     }
 
+    @Override
+    public void run() {
+        this.solve();
+    }
 }
