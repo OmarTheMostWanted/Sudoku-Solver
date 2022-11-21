@@ -10,7 +10,7 @@ public class Board extends JFrame {
     private final GridLayout mainBoard = new GridLayout(3, 3);
     private final Cell[] cells = new Cell[9];
     private final SudokuBoard sudokuBoard;
-    final int SCALE = 100;
+    final int SCALE = 50;
 
     public Board(String title, SudokuBoard sudokuBoard) throws HeadlessException {
         super(title);

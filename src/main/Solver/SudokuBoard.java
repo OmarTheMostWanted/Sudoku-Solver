@@ -71,8 +71,6 @@ public class SudokuBoard implements Runnable{
      * @return if a cell contains the number.
      */
     public boolean checkIfNumberInCell(int number, int row, int column) {
-
-
         try {
             checkCellIndex(row, column);
             checkNumberValue(number);
@@ -80,8 +78,6 @@ public class SudokuBoard implements Runnable{
             System.err.println(e.getMessage());
             return false;
         }
-
-
         for (int r = row * 3; r < (row * 3 + 3); r++) {
             for (int c = column * 3; c < (column * 3 + 3); c++) {
                 if (board[r][c] == number) {
@@ -89,9 +85,7 @@ public class SudokuBoard implements Runnable{
                 }
             }
         }
-
         return false;
-
     }
 
     /**
@@ -102,7 +96,6 @@ public class SudokuBoard implements Runnable{
      * @return
      */
     public boolean checkIfNumberInRow(int number, int row) {
-
         try {
             checkNumberValue(number);
             checkNumberIndex(row, 1);
@@ -110,17 +103,13 @@ public class SudokuBoard implements Runnable{
             System.err.println(e.getMessage());
             return false;
         }
-
         for (int c = 0; c < 9; c++)
             if (board[row][c] == number)
                 return true;
-
         return false;
-
     }
 
     public boolean checkIfNumberInColumn(int number, int column) {
-
         try {
             checkNumberValue(number);
             checkNumberIndex(1, column);
@@ -128,13 +117,10 @@ public class SudokuBoard implements Runnable{
             System.err.println(e.getMessage());
             return false;
         }
-
         for (int r = 0; r < 9; r++)
             if (board[r][column] == number)
                 return true;
-
         return false;
-
     }
 
     public ArrayList<Integer> getMissingNumbersInCell(int row, int column) {

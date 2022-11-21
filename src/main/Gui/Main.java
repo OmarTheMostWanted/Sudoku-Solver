@@ -11,7 +11,7 @@ public class Main {
 
     private static SudokuBoard sudokuBoard;
 
-    private static final String FILE  = "Easy 1";
+    private static final String FILE  = "Medium 3";
 
     public static void main(String[] args) throws InterruptedException, InvocationTargetException {
         try {
